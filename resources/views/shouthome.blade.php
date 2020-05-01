@@ -25,7 +25,7 @@
                     <div class="status shadow-sm" class="">
                         <div class="row p-3 pb-2">
                             <div class="col-md-2">
-                                <img style="width:50px;" src="//i.pinimg.com/564x/6c/a9/eb/6ca9eb3a85019663b9cb685695e5d549.jpg" class="mt-3 rounded-circle img-thumbnail mx-auto d-block" alt="">
+                            <img style="width:50px;" src="{{ $avatar }}" class="mt-3 rounded-circle img-thumbnail mx-auto d-block" alt="">
                             </div>
                             <div class="col-md-10 p-3 pr-5">
                                 <p class="author">

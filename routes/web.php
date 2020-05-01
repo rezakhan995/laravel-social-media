@@ -21,6 +21,7 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/shout', 'HomeController@shoutHome')->name('shout');
+Route::get('/shout/{nickname}', 'HomeController@shoutPublic')->name('shout.public');
 Route::post('/savestatus', 'HomeController@saveStatus')->name('shout.save');
 Route::get('/profile', 'HomeController@profile')->name('shout.profile');
 Route::post('/saveprofile', 'HomeController@saveProfile')->name('shout.saveprofile');
