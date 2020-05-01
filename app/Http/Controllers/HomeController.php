@@ -46,7 +46,19 @@ class HomeController extends Controller
             $status = Status::where('user_id', $user->id)->orderBy('id', 'desc')->get();
             $avatar = ($user->avatar) ? $user->avatar : asset("public/images/avatar.jpg");
             $name = $user->name;
-            return view('shoutpublic', ['status' => $status, 'avatar' => $avatar, 'name' => $name]);
+            $displayFriendship = false;
+            if (Auth::check() && (Auth::user()->id != $user->id)) {
+                $displayFriendship = true;
+            }
+            return view('shoutpublic', [
+                'status' => $status,
+                'avatar' => $avatar,
+                'name' => $name,
+                'displayFriendship' => $displayFriendship,
+                'friendId' => $user->id
+            ]);
+        } else {
+            return redirect('/');
         }
     }
 
@@ -90,5 +102,25 @@ class HomeController extends Controller
 
             return redirect()->route('shout.profile');
         }
+    }
+
+    public function makeFriend($friendId)
+    {
+        $userId = Auth::user()->id;
+
+        if (Friend::where('user_id', $user_id)->where('friend_id', $friendId)->count() == 0) {
+            $friendShip = new Friend();
+            $friendShip->user_id = $userId;
+            $friendShip->friend_id = $friendId;
+            $friendShip->save();
+        }
+        if (Friend::where('friend_id', $user_id)->where('user_id', $friendId)->count() == 0) {
+            $friendShip = new Friend();
+            $friendShip->user_id = $friendId;
+            $friendShip->friend_id = $userId;
+            $friendShip->save();
+        }
+
+        return redirect()->route('/shout');
     }
 }

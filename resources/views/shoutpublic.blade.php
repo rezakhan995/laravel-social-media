@@ -31,3 +31,11 @@
 @section('script')
 
 @endsection
+
+@section('action')
+        @if ($displayFriendship)
+            <a href="{{ route('shoute.makefriend', $friendId) }}">Make Friend</a>
+            <a href="{{ route('shoute.unfriend', $friendId) }}">Unfriend</a>
+        @endif
+    
+@endsection
