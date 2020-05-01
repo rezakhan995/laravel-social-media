@@ -13,8 +13,8 @@ class AddNicknameFieldToUsersTable extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->string('nickname')->default('');
+        Schema::table('users', function(Blueprint $table){
+                $table->string('nickname')->default('');
         });
     }
 
