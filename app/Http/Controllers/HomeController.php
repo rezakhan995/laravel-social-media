@@ -6,6 +6,7 @@ use App\Status;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\User;
+use App\Friend;
 
 class HomeController extends Controller
 {
@@ -30,6 +31,9 @@ class HomeController extends Controller
     }
 
 
+    /**
+     * Show Home page after successfull login 
+     */
     public function shoutHome()
     {
         $user_id = Auth::id();
@@ -39,22 +43,35 @@ class HomeController extends Controller
     }
 
 
+    /**
+     * Show specific user's status
+     */
     public function shoutPublic($nickname)
     {
         $user = User::where('nickname', $nickname)->first();
+
         if ($user) {
             $status = Status::where('user_id', $user->id)->orderBy('id', 'desc')->get();
             $avatar = ($user->avatar) ? $user->avatar : asset("public/images/avatar.jpg");
             $name = $user->name;
+
             $displayFriendship = false;
             if (Auth::check() && (Auth::user()->id != $user->id)) {
                 $displayFriendship = true;
+            }
+
+            $hasFriendship = 0;
+            if (Friend::where('user_id', Auth::user()->id)->where('friend_id', $user->id)->count() > 0) {
+                $hasFriendship = 1;
+            } else {
+                $hasFriendship = 0;
             }
             return view('shoutpublic', [
                 'status' => $status,
                 'avatar' => $avatar,
                 'name' => $name,
                 'displayFriendship' => $displayFriendship,
+                'hasFriendship' => $hasFriendship,
                 'friendId' => $user->id
             ]);
         } else {
@@ -63,6 +80,9 @@ class HomeController extends Controller
     }
 
 
+    /**
+     * Add new status
+     */
     public function saveStatus(Request $request)
     {
         if (Auth::check()) {
@@ -79,11 +99,18 @@ class HomeController extends Controller
         }
     }
 
+    /**
+     * Show own profile with edit option
+     */
     public function profile()
     {
         return view('profile');
     }
 
+
+    /**
+     * Update users profile
+     */
     public function saveProfile(Request $request)
     {
         if (Auth::check()) {
@@ -104,23 +131,38 @@ class HomeController extends Controller
         }
     }
 
+    /**
+     * Make a specific user as friend
+     */
     public function makeFriend($friendId)
     {
         $userId = Auth::user()->id;
 
-        if (Friend::where('user_id', $user_id)->where('friend_id', $friendId)->count() == 0) {
+        if (Friend::where('user_id', $userId)->where('friend_id', $friendId)->count() == 0) {
             $friendShip = new Friend();
             $friendShip->user_id = $userId;
             $friendShip->friend_id = $friendId;
             $friendShip->save();
         }
-        if (Friend::where('friend_id', $user_id)->where('user_id', $friendId)->count() == 0) {
+        if (Friend::where('friend_id', $userId)->where('user_id', $friendId)->count() == 0) {
             $friendShip = new Friend();
             $friendShip->user_id = $friendId;
             $friendShip->friend_id = $userId;
             $friendShip->save();
         }
 
-        return redirect()->route('/shout');
+        return redirect()->route('shout');
+    }
+
+
+    /**
+     * Unfriend a specific user
+     */
+    public function unFriend($friendId)
+    {
+        $userId = Auth::user()->id;
+        Friend::where('user_id', $userId)->where('friend_id', $friendId)->delete();
+        Friend::where('user_id', $friendId)->where('friend_id', $userId)->delete();
+        return redirect()->route('shout');
     }
 }

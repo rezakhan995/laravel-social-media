@@ -26,5 +26,5 @@ Route::get('/shout/{nickname}', 'HomeController@shoutPublic')->name('shout.publi
 Route::post('/savestatus', 'HomeController@saveStatus')->name('shout.save');
 Route::get('/profile', 'HomeController@profile')->name('shout.profile');
 Route::post('/saveprofile', 'HomeController@saveProfile')->name('shout.saveprofile');
-Route::get('shout/makefriend/{friendId}', 'HomeController@makeFriend')->name('shoute.makefriend');
-Route::get('shout/unfriend/{friendId}', 'HomeController@unFriend')->name('shoute.unfriend');
+Route::get('/shout/makefriend/{friendId}', 'HomeController@makeFriend')->name('shoute.makefriend');
+Route::get('/shout/unfriend/{friendId}', 'HomeController@unFriend')->name('shoute.unfriend');
