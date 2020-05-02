@@ -44,8 +44,7 @@ class HomeController extends Controller
             $friend->save();
         }
         $status = Auth::user()->friendsStatus;
-        $avatar = (Auth::user()->avatar) ? Auth::user()->avatar : asset("public/images/avatar.jpg");
-        return view('shouthome', ['status' => $status, 'avatar' => $avatar]);
+        return view('shouthome', ['status' => $status]);
     }
 
 
@@ -66,12 +65,13 @@ class HomeController extends Controller
                 $displayFriendship = true;
             }
 
-            $hasFriendship = 0;
+            $hasFriendship = false;
             if (Friend::where('user_id', Auth::user()->id)->where('friend_id', $user->id)->count() > 0) {
-                $hasFriendship = 1;
+                $hasFriendship = true;
             } else {
-                $hasFriendship = 0;
+                $hasFriendship = false;
             }
+
             return view('shoutpublic', [
                 'status' => $status,
                 'avatar' => $avatar,
